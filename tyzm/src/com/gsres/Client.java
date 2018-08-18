@@ -16,9 +16,11 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
+import net.sf.json.JSONObject;
+
 public class Client {
-    private String accout;
-    private String password;
+    private String accout="";
+    private String password="wsq0304";
     CloseableHttpClient client = HttpClients.createDefault();//实例化httpclient
     HttpResponse response = null;
     String rawHtml;
@@ -33,7 +35,8 @@ public class Client {
 		// TODO Auto-generated constructor stub
 	}
 
-	public void login() {
+	public String login() {
+		String result =""; 
         HttpGet getLoginPage = new HttpGet("http://tyzm.gsres.cn/index.php?app=Home&mod=Index&act=login");//教务处登陆页面get
         
         try {
@@ -60,12 +63,13 @@ public class Client {
             response = client.execute(post);//执行登陆行为
             rawHtml = EntityUtils.toString(response.getEntity(), "utf-8");
             System.out.println(rawHtml);
- 
+            result = rawHtml;
         } catch (ClientProtocolException e) {
             System.out.println(e.getMessage());
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
+        return result;
     }
     
   private  void getVerifyingCode() {
@@ -88,11 +92,23 @@ public class Client {
                 e.printStackTrace();
             }
         }
+        
+    }
+    public JSONObject parseGetLoginName(String result){
+    	
+    	JSONObject jsonObj = JSONObject.fromObject(result);
+    	String status = jsonObj.getString("status");
+    	if("200".equals(status)){
+    		JSONObject userInfo = jsonObj.getJSONObject("data"); 
+    		userInfo.put("isZjUser", 0);
+    		userInfo.put("password", this.password);
+    	}
+  	    return jsonObj;
     }
     public static void main(String[] args) {
 		Client client = new Client();
-		client.login();
-		
+		String getLoginNameResult = client.login();
+		client.parseGetLoginName(getLoginNameResult);
 	}
 }
 
