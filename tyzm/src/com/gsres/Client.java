@@ -184,9 +184,9 @@ public class Client {
     	return unRead;
     }
     public String read(String href,String title) throws Exception{
-    	String unReadHref = "http://rwsy.gsres.cn/wx/";
-    	System.out.println(unReadHref+href);
-    	HttpGet readUrl = new HttpGet(unReadHref+href);
+    	String unReadHref = "http://rwsy.gsres.cn/wx/read.htm";
+    	System.out.println(unReadHref+href.replace("content.htm", ""));
+    	HttpGet readUrl = new HttpGet(unReadHref+href.replace("content.htm", ""));
     	execute = client.execute(readUrl );
     	String  content =EntityUtils.toString(execute.getEntity(), "utf-8");
     	System.out.println("doingRead-->content="+content);
