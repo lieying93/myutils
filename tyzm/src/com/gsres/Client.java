@@ -207,10 +207,10 @@ public class Client {
 		//获取未读的内容
 		String [][]  unRead = client.unRead();
 		//每天读取的文章数设置
-		int readNum = 1;
-		for(int i =0;i<readNum;i++){
-			client.read(unRead[i][0],unRead[i][1]);
-		}
+//		int readNum = 1;
+//		for(int i =0;i<readNum;i++){
+//			client.read(unRead[i][0],unRead[i][1]);
+//		}
 		//读出内容
 		//client.readHistory();
 	}
