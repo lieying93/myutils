@@ -30,7 +30,7 @@ import net.sf.json.JSONObject;
 public class Client {
     private String accout="";
     private String password="wsq0304";
-    CloseableHttpClient client = HttpClients.createDefault();//ÊµÀı»¯httpclient
+    CloseableHttpClient client = HttpClients.createDefault();//å®ä¾‹åŒ–httpclient
     HttpResponse response = null;
     String rawHtml;
 	private CloseableHttpResponse execute=null;
@@ -38,26 +38,26 @@ public class Client {
 
 	public String login() {
 		String result =""; 
-        HttpGet getLoginPage = new HttpGet("http://tyzm.gsres.cn/index.php?app=Home&mod=Index&act=login");//½ÌÎñ´¦µÇÂ½Ò³Ãæget
+        HttpGet getLoginPage = new HttpGet("http://tyzm.gsres.cn/index.php?app=Home&mod=Index&act=login");//æ•™åŠ¡å¤„ç™»é™†é¡µé¢get
         try {
-            //´ò¿ª½ÌÎñ´¦
-            execute = client.execute(getLoginPage);
-            //»ñÈ¡ÑéÖ¤Âë
+            //æ‰“å¼€æ•™åŠ¡å¤„
+      //      execute = client.execute(getLoginPage);
+            //è·å–éªŒè¯ç 
             getVerifyingCode();
-            //ÌáĞÑÓÃ»§²¢ÊäÈëÑéÖ¤Âë
-            System.out.println("verifying code has been save as verifyCode.jpeg, input its content");
-            String code=null;
-            Scanner in = new Scanner(System.in);
-            code = in.nextLine();
-            in.close();
-            //Éè¶¨post²ÎÊı£¬ºÍÉÏÍ¼ÖĞµÄÄÚÈİÒ»ÖÂ
-            HttpPost post = new HttpPost("http://tyzm.gsres.cn/index.php?app=Home&mod=Ajax&act=getLoginName");//¹¹½¨post¶ÔÏó
+            //æé†’ç”¨æˆ·å¹¶è¾“å…¥éªŒè¯ç 
+            String code=Client.getImage("D:/verifycode.png");
+            System.out.println("code="+code);
+//            Scanner in = new Scanner(System.in);
+//            code = in.nextLine();
+//            in.close();
+            //è®¾å®špostå‚æ•°ï¼Œå’Œä¸Šå›¾ä¸­çš„å†…å®¹ä¸€è‡´
+            HttpPost post = new HttpPost("http://tyzm.gsres.cn/index.php?app=Home&mod=Ajax&act=getLoginName");//æ„å»ºpostå¯¹è±¡
             ArrayList<BasicNameValuePair> postData = new ArrayList<BasicNameValuePair>();
-            postData.add(new BasicNameValuePair("inputName", "622822196703044525"));
+            postData.add(new BasicNameValuePair("inputName", "622822198111064513"));
             postData.add(new BasicNameValuePair("verifyCode", code));
-            postData.add(new BasicNameValuePair("unreset", "1"));//ÑéÖ¤Âë
-            post.setEntity(new UrlEncodedFormEntity(postData));//À¦°ó²ÎÊı
-            response = client.execute(post);//Ö´ĞĞµÇÂ½ĞĞÎª
+            postData.add(new BasicNameValuePair("unreset", "1"));//éªŒè¯ç 
+            post.setEntity(new UrlEncodedFormEntity(postData));//æ†ç»‘å‚æ•°
+            response = client.execute(post);//æ‰§è¡Œç™»é™†è¡Œä¸º
             rawHtml = EntityUtils.toString(response.getEntity(), "utf-8");
             System.out.println(rawHtml);
             result = rawHtml;
@@ -69,13 +69,13 @@ public class Client {
         return result;
     }
   private  void getVerifyingCode() {
-        HttpGet getVerifyCode = new HttpGet("http://tyzm.gsres.cn/index.php?app=Home&mod=Ajax&act=getVerifyCode");//ÑéÖ¤Âëget
+        HttpGet getVerifyCode = new HttpGet("http://tyzm.gsres.cn/index.php?app=Home&mod=Ajax&act=getVerifyCode");//éªŒè¯ç get
         FileOutputStream fileOutputStream = null;
         HttpResponse response;
         try {
-            response = client.execute(getVerifyCode);//»ñÈ¡ÑéÖ¤Âë
-            /*ÑéÖ¤ÂëĞ´ÈëÎÄ¼ş,µ±Ç°¹¤³ÌµÄ¸ùÄ¿Â¼,±£´æÎªverifyCode.jped*/
-            fileOutputStream = new FileOutputStream(new File("D:/verifycode.jpg"));
+            response = client.execute(getVerifyCode);//è·å–éªŒè¯ç 
+            /*éªŒè¯ç å†™å…¥æ–‡ä»¶,å½“å‰å·¥ç¨‹çš„æ ¹ç›®å½•,ä¿å­˜ä¸ºverifyCode.jped*/
+            fileOutputStream = new FileOutputStream(new File("D:/verifycode.png"));
             response.getEntity().writeTo(fileOutputStream);
         } catch (ClientProtocolException e) {
             e.printStackTrace();
@@ -129,7 +129,10 @@ public class Client {
     	params.add(new BasicNameValuePair("execution", ticketData.getString("execution")));
     	params.add(new BasicNameValuePair("key", "login_name"));
     	params.add(new BasicNameValuePair("lt", ticketData.getString("lt")));
-    	params.add(new BasicNameValuePair("password", "893b23f52c1e8eefb5e27b0e365a5ec3"));
+    	//ç‹æ·‘ç´ç™»å½•å¯†ç 
+    	//params.add(new BasicNameValuePair("password", "893b23f52c1e8eefb5e27b0e365a5ec3"));
+    	//æç»´ç§‘ç™»å½•å¯†ç 
+    	params.add(new BasicNameValuePair("password", "7e993773c6570a3e1a74500bdb3d70a2"));
     	params.add(new BasicNameValuePair("service", "http://i.changyan.com/icloud?from=ew"));
     	params.add(new BasicNameValuePair("username",userInfo.getString("loginName") ));
     	String  str = EntityUtils.toString(new UrlEncodedFormEntity(params, Consts.UTF_8));
@@ -165,7 +168,7 @@ public class Client {
     	
     }
     public String[][] unRead() throws Exception{
-    	//Ã¿Ò³20Ìõ¼ÇÂ¼,Ã¿´ÎÔËĞĞÖ»¶ÁÈ¡Ê×Ò³µÄÎ´¶Á¼ÇÂ¼Êı,µÚÒ»ÁĞÊÇhrefµØÖ·,µÚ¶şÁĞÊÇ±êÌâ
+    	//æ¯é¡µ20æ¡è®°å½•,æ¯æ¬¡è¿è¡Œåªè¯»å–é¦–é¡µçš„æœªè¯»è®°å½•æ•°,ç¬¬ä¸€åˆ—æ˜¯hrefåœ°å€,ç¬¬äºŒåˆ—æ˜¯æ ‡é¢˜
     	String[][] unRead = new String [20][2];
     	String url = "http://rwsy.gsres.cn/wx/unreadhistory.htm";
     	HttpGet sLogin = new HttpGet(url);
@@ -175,9 +178,9 @@ public class Client {
     	Document doc = Jsoup.parse(content);
     	Elements liArray = doc.select("div.Main").select("ul").select("li");
     	for(int i =0; i< liArray.size();i++){
-    		System.out.println("µÚ"+(i+1)+"ÌõÎ´¶Á¼ÇÂ¼:");
-    		System.out.println("±êÌâ:"+liArray.get(i).select("div.text_qishu").html());
-    		System.out.println("Á´½Ó:"+liArray.get(i).select("a").attr("href"));
+    		System.out.println("ç¬¬"+(i+1)+"æ¡æœªè¯»è®°å½•:");
+    		System.out.println("æ ‡é¢˜:"+liArray.get(i).select("div.text_qishu").html());
+    		System.out.println("é“¾æ¥:"+liArray.get(i).select("a").attr("href"));
     		unRead[i][0]=liArray.get(i).select("a").attr("href");
     		unRead[i][1]=liArray.get(i).select("div.text_qishu").html();
     	}
@@ -192,26 +195,45 @@ public class Client {
     	System.out.println("doingRead-->content="+content);
     	return "";
     }
+    public static String getImage(String  fileName){
+		File storeFile =new File(fileName);
+		String valCode = null;
+		try {
+			valCode = new OCR().recognizeText(storeFile, "png");
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return valCode;
+	}
     public static void main(String[] args) throws Exception {
 		Client client = new Client();
-	//	String getLoginNameResult = client.login();
-		String getLoginNameResult="{\"status\":200,\"data\":{\"inputType\":\"id_card_no\",\"oldLoginName\":\"\\u738b\\u6dd1\\u7434\",\"loginName\":\"gsres_iflytek_d9dd7d07a7ca9c9a5c7c33f510afddc8\",\"isOldUser\":1,\"reviewStatus\":\"110002\",\"userType\":\"002\",\"userId\":\"3162000039000195022\"}}";
+		String getLoginNameResult = client.login();
+		//ç‹æ·‘ç´ç™»å½•ä¿¡æ¯
+		//String getLoginNameResult="{\"status\":200,\"data\":{\"inputType\":\"id_card_no\",\"oldLoginName\":\"\\u738b\\u6dd1\\u7434\",\"loginName\":\"gsres_iflytek_d9dd7d07a7ca9c9a5c7c33f510afddc8\",\"isOldUser\":1,\"reviewStatus\":\"110002\",\"userType\":\"002\",\"userId\":\"3162000039000195022\"}}";
+		//æç»´ç§‘ç™»å½•ä¿¡æ¯
+		/*String getLoginNameResult="{\"status\":200,\"data\":{\"inputType\":\"id_card_no\",\"oldLoginName\":\"\\u674e\\u7ef4\\u79d1\",\"loginName\":\"gsres_iflytek_2c471eee6665563d20102373f016c4dd\",\"isOldUser\":1,\"reviewStatus\":\"110002\",\"userType\":\"002\",\"userId\":\"3162000039000311760\"}}";
 		JSONObject userInfo = client.parseGetLoginName(getLoginNameResult);		
-		//¾­¹ı²âÊÔ  µÇÂ¼ÊÇÕâ¸ö·½·¨
+		//ç»è¿‡æµ‹è¯•  ç™»å½•æ˜¯è¿™ä¸ªæ–¹æ³•
 		JSONObject ticketData = client.getLoginTicket();
 		client.getSSOLogin(userInfo,ticketData);
-		//µÇÂ¼³É¹¦ 
+		//ç™»å½•æˆåŠŸ 
 		client.index();
-		//¸ÊËà½ÌÑ§Ê¦·¶Ö÷Ò³
+		//ç”˜è‚ƒæ•™å­¦å¸ˆèŒƒä¸»é¡µ
 		client.gsjsxy(); 
-		//»ñÈ¡Î´¶ÁµÄÄÚÈİ
+		//è·å–æœªè¯»çš„å†…å®¹
 		String [][]  unRead = client.unRead();
-		//Ã¿Ìì¶ÁÈ¡µÄÎÄÕÂÊıÉèÖÃ
-//		int readNum = 1;
-//		for(int i =0;i<readNum;i++){
-//			client.read(unRead[i][0],unRead[i][1]);
-//		}
-		//¶Á³öÄÚÈİ
+		//æ¯å¤©è¯»å–çš„æ–‡ç« æ•°è®¾ç½®
+		int readNum = 20;
+		for(int i =0;i<readNum;i++){
+			client.read(unRead[i][0],unRead[i][1]);
+			System.out.println("ç¨‹åºç¡çœ 2åˆ†é’Ÿå¼€å§‹ã€‚ã€‚ã€‚");
+			Thread.sleep(1*60*1000);
+			System.out.println("ç¨‹åºç¡çœ 2åˆ†é’Ÿç»“æŸã€‚ã€‚ã€‚");
+		}*/
+		//è¯»å‡ºå†…å®¹
 		//client.readHistory();
 	}
 }
